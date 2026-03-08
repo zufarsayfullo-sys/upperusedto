@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Used To · Would · Be Used To Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest:   #1a2e1e;
+    --moss:     #2d4a32;
+    --sage:     #4a7c59;
+    --gold:     #c8a96e;
+    --gold-lt:  #e2c98a;
+    --cream:    #f2ede4;
+    --red:      #b84444;
+    --green:    #3a8c5c;
+    --glass:    rgba(255,255,255,0.06);
+    --border:   rgba(255,255,255,0.12);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    background: var(--forest);
+    color: #fff;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* ── BACKGROUND ── */
+  .bg-photo {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      linear-gradient(160deg, rgba(26,46,30,0.92) 0%, rgba(26,46,30,0.75) 50%, rgba(26,46,30,0.92) 100%),
+      url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1600&q=80') center/cover no-repeat;
+  }
+  .bg-grain {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  }
+  .bg-vines {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background-image:
+      radial-gradient(ellipse 40% 60% at 5% 50%, rgba(74,124,89,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 30% 40% at 95% 20%, rgba(200,169,110,0.08) 0%, transparent 60%);
+  }
+
+  /* ── LAYOUT ── */
+  #app {
+    position: relative; z-index: 10;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 24px 16px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: rgba(20,38,22,0.88);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 42px 46px;
+    width: 100%; max-width: 780px;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.07);
+  }
+
+  /* ── INTRO ── */
+  #intro-screen { text-align: center; }
+  .intro-eyebrow {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 18px; font-weight: 500;
+  }
+  .intro-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px; line-height: 1.1; margin-bottom: 14px;
+    color: var(--cream);
+  }
+  .intro-title em { color: var(--gold); font-style: italic; }
+  .intro-desc {
+    color: rgba(255,255,255,0.5); font-size: 15px; line-height: 1.7;
+    max-width: 480px; margin: 0 auto 28px;
+  }
+  .confusion-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+    max-width: 500px; margin: 0 auto 32px;
+  }
+  .cf-item {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px; padding: 12px 14px; text-align: left;
+  }
+  .cf-wrong { font-size: 12px; color: var(--red); margin-bottom: 3px; text-decoration: line-through; opacity: 0.8; }
+  .cf-right { font-size: 12px; color: var(--green); font-weight: 600; }
+  .cf-label { font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+
+  .intro-stats {
+    display: flex; justify-content: center; gap: 40px; margin-bottom: 32px;
+  }
+  .is-val { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--gold); }
+  .is-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+
+  /* ── NAME SCREEN ── */
+  #name-screen { text-align: center; }
+  .name-input {
+    width: 100%; max-width: 380px;
+    background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.15);
+    border-radius: 10px; padding: 14px 18px;
+    font-family: 'Outfit', sans-serif; font-size: 16px; color: #fff;
+    outline: none; transition: border-color 0.2s; text-align: center; display: block; margin: 0 auto 8px;
+  }
+  .name-input::placeholder { color: rgba(255,255,255,0.25); }
+  .name-input:focus { border-color: var(--gold); }
+  .name-error { color: var(--red); font-size: 13px; margin-bottom: 16px; display: none; }
+
+  /* ── QUIZ HEADER ── */
+  .quiz-header {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 26px;
+  }
+  .q-badge {
+    font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); border: 1px solid rgba(200,169,110,0.4); padding: 4px 12px; border-radius: 20px;
+  }
+  .timer-wrap { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.5); font-size: 13px; }
+  #timer-display {
+    font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 700; color: #fff;
+    transition: color 0.4s;
+  }
+  #timer-display.warn  { color: #e09a3a; }
+  #timer-display.danger { color: var(--red); animation: blink 0.8s infinite; }
+  @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.4} }
+
+  /* ── PROGRESS ── */
+  .prog-meta {
+    display: flex; justify-content: space-between; font-size: 11px;
+    color: rgba(255,255,255,0.35); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .prog-meta strong { color: rgba(255,255,255,0.7); font-size: 13px; }
+  .prog-track {
+    display: flex; gap: 3px; height: 5px; margin-bottom: 30px;
+  }
+  .prog-seg {
+    flex: 1; border-radius: 3px; background: rgba(255,255,255,0.08); transition: background 0.4s;
+  }
+  .prog-seg.correct  { background: var(--green); }
+  .prog-seg.wrong    { background: var(--red); }
+  .prog-seg.active   { background: var(--gold); animation: segpulse 1s infinite; }
+  @keyframes segpulse { 0%,100%{opacity:1}50%{opacity:0.5} }
+
+  /* ── QUESTION ── */
+  .q-num { font-size: 11px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; margin-bottom: 12px; }
+  .q-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px; line-height: 1.55; color: var(--cream); margin-bottom: 30px; min-height: 76px;
+  }
+  .q-text mark {
+    background: transparent; color: var(--gold-lt);
+    border-bottom: 2px dashed rgba(200,169,110,0.4); font-style: italic;
+  }
+
+  /* ── OPTIONS ── */
+  .options { display: flex; flex-direction: column; gap: 11px; margin-bottom: 28px; }
+  .opt {
+    position: relative; cursor: pointer;
+    background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.09);
+    border-radius: 11px; padding: 15px 18px 15px 50px;
+    font-size: 15px; color: rgba(255,255,255,0.78);
+    transition: all 0.2s; user-select: none;
+  }
+  .opt:hover:not(.disabled) {
+    background: rgba(200,169,110,0.1); border-color: rgba(200,169,110,0.35);
+    color: #fff; transform: translateX(4px);
+  }
+  .opt-lbl {
+    position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.4);
+    transition: all 0.2s;
+  }
+  .opt:hover:not(.disabled) .opt-lbl { border-color: var(--gold); color: var(--gold); }
+  .opt.selected { background: rgba(200,169,110,0.12); border-color: var(--gold); color: #fff; }
+  .opt.selected .opt-lbl { background: var(--gold); border-color: var(--gold); color: #1a2e1e; }
+  .opt.correct-ans { background: rgba(58,140,92,0.18); border-color: var(--green); color: #fff; animation: pop 0.35s ease; }
+  .opt.correct-ans .opt-lbl { background: var(--green); border-color: var(--green); color: #fff; }
+  .opt.wrong-ans { background: rgba(184,68,68,0.15); border-color: var(--red); color: rgba(255,255,255,0.55); }
+  .opt.wrong-ans .opt-lbl { background: var(--red); border-color: var(--red); color: #fff; }
+  .opt.disabled { cursor: default; pointer-events: none; }
+  @keyframes pop { 0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)} }
+
+  /* ── FEEDBACK ── */
+  .feedback {
+    border-radius: 10px; padding: 13px 16px; margin-bottom: 22px;
+    font-size: 14px; line-height: 1.6; display: none;
+    animation: fadeup 0.3s ease;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok  { background: rgba(58,140,92,0.15); border-left: 3px solid var(--green); }
+  .feedback.bad { background: rgba(184,68,68,0.15); border-left: 3px solid var(--red); }
+  @keyframes fadeup { from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)} }
+
+  /* ── BUTTONS ── */
+  .btn-row { display: flex; justify-content: flex-end; gap: 10px; }
+  .btn {
+    font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600;
+    padding: 11px 26px; border-radius: 9px; border: none; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-primary { background: linear-gradient(135deg, var(--gold), #a07830); color: #1a2e1e; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,169,110,0.3); }
+  .btn-ghost { background: transparent; color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.15); }
+  .btn-ghost:hover { color: #fff; border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.05); }
+
+  /* ── RESULT ── */
+  #result-screen { text-align: center; }
+  .result-ring {
+    width: 130px; height: 130px; margin: 0 auto 26px; border-radius: 50%;
+    position: relative; display: flex; align-items: center; justify-content: center;
+    background: conic-gradient(var(--green) 0deg, var(--green) var(--deg), rgba(255,255,255,0.07) var(--deg));
+    box-shadow: 0 0 50px rgba(58,140,92,0.2);
+  }
+  .result-ring::before {
+    content:''; position:absolute; inset:10px; border-radius:50%;
+    background: rgba(20,38,22,0.95);
+  }
+  .result-score {
+    position: relative; z-index: 1;
+    font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 700;
+  }
+  .result-score span { font-size: 14px; color: rgba(255,255,255,0.45); display:block; font-family:'Outfit',sans-serif; font-weight:400; }
+  .result-title { font-family:'Cormorant Garamond',serif; font-size:30px; margin-bottom:8px; color:var(--cream); }
+  .result-sub { color:rgba(255,255,255,0.45); font-size:15px; margin-bottom:28px; }
+  .result-stats { display:flex; justify-content:center; gap:32px; margin-bottom:32px; }
+  .rs-val { font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:700; }
+  .rs-val.g { color:var(--green); } .rs-val.r { color:var(--red); }
+  .rs-label { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:rgba(255,255,255,0.35); margin-top:2px; }
+
+  /* ── TIMEOUT ── */
+  #timeout-screen { text-align:center; }
+  .to-icon { font-size:52px; margin-bottom:14px; }
+  .to-title { font-family:'Cormorant Garamond',serif; font-size:32px; margin-bottom:8px; color:var(--cream); }
+  .to-sub { color:rgba(255,255,255,0.45); font-size:15px; margin-bottom:26px; }
+
+  .hidden { display:none!important; }
+
+  @media(max-width:600px){
+    .card { padding:28px 20px; }
+    .q-text { font-size:19px; }
+    .intro-title { font-size:32px; }
+    .confusion-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-grain"></div>
+<div class="bg-vines"></div>
+
+<div id="app">
+<div class="card">
+
+  <!-- INTRO -->
+  <div id="intro-screen">
+    <div class="intro-eyebrow">Oxford Navigate · Upper Intermediate</div>
+    <h1 class="intro-title">Master<br><em>Used To, Would</em><br>&amp; Be Used To</h1>
+    <p class="intro-desc">Targeted practice on the forms that upper-intermediate learners confuse most. 10 mixed questions per round — context is everything!</p>
+    <div class="confusion-grid">
+      <div class="cf-item">
+        <div class="cf-wrong">used to studying</div>
+        <div class="cf-right">used to study</div>
+        <div class="cf-label">bare infinitive</div>
+      </div>
+      <div class="cf-item">
+        <div class="cf-wrong">would be busy (now)</div>
+        <div class="cf-right">is usually busy</div>
+        <div class="cf-label">present habit</div>
+      </div>
+      <div class="cf-item">
+        <div class="cf-wrong">would be (state)</div>
+        <div class="cf-right">used to be</div>
+        <div class="cf-label">past state</div>
+      </div>
+      <div class="cf-item">
+        <div class="cf-wrong">gets used to drive</div>
+        <div class="cf-right">is used to driving</div>
+        <div class="cf-label">be used to + -ing</div>
+      </div>
+      <div class="cf-item">
+        <div class="cf-wrong">get used to sitting (past habit)</div>
+        <div class="cf-right">would sit</div>
+        <div class="cf-label">past repeated action</div>
+      </div>
+      <div class="cf-item">
+        <div class="cf-wrong">used to + positive (neg. context)</div>
+        <div class="cf-right">didn't use to</div>
+        <div class="cf-label">negative past habit</div>
+      </div>
+    </div>
+    <div class="intro-stats">
+      <div><div class="is-val">100</div><div class="is-label">Questions</div></div>
+      <div><div class="is-val">10</div><div class="is-label">Per Round</div></div>
+      <div><div class="is-val">5:00</div><div class="is-label">Timer</div></div>
+    </div>
+    <button class="btn btn-primary" onclick="goToName()">Begin Quiz →</button>
+  </div>
+
+  <!-- NAME -->
+  <div id="name-screen" class="hidden" style="text-align:center">
+    <div class="intro-eyebrow">Oxford Navigate · Upper Intermediate</div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--cream);margin-bottom:12px">Before you begin…</h2>
+    <p style="color:rgba(255,255,255,0.45);font-size:15px;margin-bottom:24px">Enter your name so your teacher can see your results.</p>
+    <input type="text" id="student-name" class="name-input" placeholder="Your full name" maxlength="60"
+      onkeydown="if(event.key==='Enter')confirmName()" />
+    <div class="name-error" id="name-error">Please enter your name to continue.</div>
+    <button class="btn btn-primary" onclick="confirmName()">Start Quiz →</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-screen" class="hidden">
+    <div class="quiz-header">
+      <div class="q-badge">Used To · Would · Be Used To</div>
+      <div class="timer-wrap"><span>⏱</span><span id="timer-display">5:00</span></div>
+    </div>
+    <div class="prog-meta"><span>Progress</span><strong id="prog-label">1 / 10</strong></div>
+    <div class="prog-track" id="prog-track"></div>
+    <div class="q-num" id="q-num">Question 1</div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="skipQ()">Skip</button>
+      <button class="btn btn-primary" id="next-btn" onclick="nextQ()" style="display:none">Next →</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result-screen" class="hidden">
+    <div class="result-ring" id="result-ring">
+      <div class="result-score" id="result-score">0<span>/ 10</span></div>
+    </div>
+    <h2 class="result-title" id="result-title">Well done!</h2>
+    <p class="result-sub" id="result-sub"></p>
+    <div class="result-stats">
+      <div><div class="rs-val g" id="rs-correct">0</div><div class="rs-label">Correct</div></div>
+      <div><div class="rs-val r" id="rs-wrong">0</div><div class="rs-label">Wrong</div></div>
+      <div><div class="rs-val" id="rs-skip" style="color:rgba(255,255,255,0.4)">0</div><div class="rs-label">Skipped</div></div>
+    </div>
+    <button class="btn btn-primary" onclick="startQuiz()">Try Again →</button>
+  </div>
+
+  <!-- TIMEOUT -->
+  <div id="timeout-screen" class="hidden">
+    <div class="to-icon">⌛</div>
+    <h2 class="to-title">Time's Up!</h2>
+    <p class="to-sub">You ran out of time.</p>
+    <div class="result-stats">
+      <div><div class="rs-val g" id="to-correct">0</div><div class="rs-label">Correct</div></div>
+      <div><div class="rs-val r" id="to-wrong">0</div><div class="rs-label">Wrong</div></div>
+      <div><div class="rs-val" id="to-skip" style="color:rgba(255,255,255,0.4)">0</div><div class="rs-label">Skipped</div></div>
+    </div>
+    <button class="btn btn-primary" style="margin-top:20px" onclick="startQuiz()">Try Again →</button>
+  </div>
+
+</div>
+</div>
+
+<script>
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzvhd9K2CVC9_EPkhAEYFDp8K1CBpGUWNrEAEVC4w4Q8eHh5uDFO_aaKPMcH-Tajv5U/exec';
+
+// ═══════════════════════════════════════════════════════════════════════
+// QUESTION BANK — 100 questions targeting real student error patterns
+//
+// ERROR TAGS:
+//  [A] used to + VERB (bare inf) vs used to + -ing
+//  [B] would (past habit) vs used to (past state)
+//  [C] would vs is usually (present habit)
+//  [D] be used to + -ing (present/past adjustment)
+//  [E] get/be used to vs used to (confusion)
+//  [F] didn't use to (negative) vs used to (positive)
+//  [G] get used to (ongoing adjustment) vs used to / would
+// ═══════════════════════════════════════════════════════════════════════
+const ALL_QUESTIONS = [
+
+  // ── [A] used to + bare infinitive (NOT gerund) ─────────────────────
+  { tag:"A", q:"When I was a student, I ___ in the library every evening.", opts:["used to studying","used to study","would studying","am used to study"], a:1,
+    exp:"<strong>used to study</strong> — after <em>used to</em> we always use the bare infinitive, never a gerund (-ing form)." },
+  { tag:"A", q:"As a child, she ___ her homework right after school.", opts:["used to doing","was used to do","used to do","would doing"], a:2,
+    exp:"<strong>used to do</strong> — bare infinitive after <em>used to</em>." },
+  { tag:"A", q:"We ___ football in the park every weekend when we were teenagers.", opts:["used to playing","used to play","would playing","were used to play"], a:1,
+    exp:"<strong>used to play</strong> — bare infinitive, not gerund." },
+  { tag:"A", q:"He ___ to school on foot before they moved to the suburbs.", opts:["used to walking","used to walk","would walking","is used to walk"], a:1,
+    exp:"<strong>used to walk</strong> — bare infinitive after <em>used to</em>." },
+  { tag:"A", q:"My grandfather ___ stories about the war every Sunday evening.", opts:["used to telling","used to tell","would telling","is used to tell"], a:1,
+    exp:"<strong>used to tell</strong> — bare infinitive." },
+  { tag:"A", q:"They ___ dinner together as a family, but not anymore.", opts:["used to having","used to have","would having","are used to have"], a:1,
+    exp:"<strong>used to have</strong> — bare infinitive required after <em>used to</em>." },
+  { tag:"A", q:"I ___ the bus to work before I bought a car.", opts:["used to taking","used to take","would taking","am used to take"], a:1,
+    exp:"<strong>used to take</strong> — bare infinitive." },
+  { tag:"A", q:"She ___ her lunch at her desk, but now she goes to the canteen.", opts:["used to eating","used to eat","would eating","is used to eat"], a:1,
+    exp:"<strong>used to eat</strong> — the correct form is <em>used to</em> + bare infinitive." },
+
+  // ── [B] would (repeated past action) vs used to (past state) ───────
+  { tag:"B", q:"I'm afraid Grandma is not as fit and healthy as she ___.", opts:["would be","would have been","used to be","was used to be"], a:2,
+    exp:"<strong>used to be</strong> — we use <em>used to</em> for past states, NOT <em>would</em>. <em>Would</em> is only for repeated actions, not states." },
+  { tag:"B", q:"There ___ a cinema on that corner, but it was demolished years ago.", opts:["would be","would have","used to be","was used to be"], a:2,
+    exp:"<strong>used to be</strong> — permanent states in the past use <em>used to</em>, not <em>would</em>." },
+  { tag:"B", q:"My parents ___ sit with us at bedtime when we were little.", opts:["used to","would","were used to","got used to"], a:1,
+    exp:"<strong>would sit</strong> — for repeated past actions, both <em>would</em> and <em>used to</em> are correct, but <em>would</em> is more natural here as it describes a repeated routine, not a state." },
+  { tag:"B", q:"She ___ love jazz when she was younger, but now she prefers classical.", opts:["would love","would be loving","used to love","was used to love"], a:2,
+    exp:"<strong>used to love</strong> — <em>love</em> is a state verb; we use <em>used to</em>, not <em>would</em>, with state verbs." },
+  { tag:"B", q:"He ___ have a beard, but he shaved it off last year.", opts:["would have","would be having","used to have","was used to have"], a:2,
+    exp:"<strong>used to have</strong> — <em>have</em> is a state verb here; use <em>used to</em>, not <em>would</em>." },
+  { tag:"B", q:"My father ___ pick me up from school every Friday.", opts:["used to picking","was used to pick","would pick","got used to picking"], a:2,
+    exp:"<strong>would pick</strong> — a repeated past action, so <em>would</em> is correct. <em>Used to pick</em> also works, but <em>would</em> emphasises the repeated routine." },
+  { tag:"B", q:"I ___ know the answer to every question in class when I was young.", opts:["would know","would be knowing","used to know","was used to know"], a:2,
+    exp:"<strong>used to know</strong> — <em>know</em> is a state verb; use <em>used to</em>, not <em>would</em>." },
+  { tag:"B", q:"We ___ go on holiday to the same village every summer.", opts:["used to going","were used to go","would go","got used to going"], a:2,
+    exp:"<strong>would go</strong> — a repeated past action. <em>Used to go</em> is also correct, but <em>would</em> is natural here." },
+
+  // ── [C] would vs is usually (present habit / general truth) ────────
+  { tag:"C", q:"Right now it's best not to take the motorway as it ___ busy at this time.", opts:["would be","used to be","is usually","was used to be"], a:2,
+    exp:"<strong>is usually</strong> — for a present, regular situation we use <em>usually + present simple</em>. <em>Would</em> and <em>used to</em> refer to the past." },
+  { tag:"C", q:"You shouldn't take the highway right now as it ___ very congested at rush hour.", opts:["would be","used to be","is usually","was used to being"], a:2,
+    exp:"<strong>is usually</strong> — this is a present habit/general truth, not a past habit." },
+  { tag:"C", q:"Avoid the town centre on Saturdays — it ___ extremely crowded.", opts:["would be","used to be","is usually","was used to be"], a:2,
+    exp:"<strong>is usually</strong> — we're describing the current typical situation, so present simple is required." },
+  { tag:"C", q:"Don't call her before 9 a.m. — she ___ still asleep at that time.", opts:["would be","used to be","is usually","was used to being"], a:2,
+    exp:"<strong>is usually</strong> — present habit/general truth about the current situation." },
+  { tag:"C", q:"The café near the station ___ packed at lunchtime, so go early.", opts:["would be","used to be","is usually","was used to being"], a:2,
+    exp:"<strong>is usually</strong> — present general fact, not a past habit." },
+  { tag:"C", q:"Be careful on that road at night — it ___ very icy in winter.", opts:["would be","used to be","is usually","was used to being"], a:2,
+    exp:"<strong>is usually</strong> — current, repeated situation described by present simple." },
+
+  // ── [D] be used to + -ing (present/past adjustment) ────────────────
+  { tag:"D", q:"My dad got angry when mum drove, because he ___ driving himself.", opts:["gets used to","used to drive","was used to driving","would drive"], a:2,
+    exp:"<strong>was used to driving</strong> — <em>be used to</em> + gerund (-ing) means 'be accustomed to'. <em>Gets used to drive</em> is wrong — it must be <em>to driving</em>." },
+  { tag:"D", q:"She finds the night shifts hard because she ___ working during the day.", opts:["used to work","is used to working","would work","gets used to work"], a:1,
+    exp:"<strong>is used to working</strong> — <em>be used to</em> + gerund = accustomed to. After <em>used to</em> (in this structure) we need -ing." },
+  { tag:"D", q:"After six months in Iceland, he ___ the cold weather.", opts:["used to","is used to","has got used to","got used to"], a:3,
+    exp:"<strong>got used to</strong> — this describes the process of becoming accustomed. <em>Got used to</em> + gerund (the cold weather) = became accustomed to it." },
+  { tag:"D", q:"The children ___ waking up early because school starts at 7:30.", opts:["used to wake","are used to waking","would wake","got used to wake"], a:1,
+    exp:"<strong>are used to waking</strong> — <em>be used to</em> + -ing = they are accustomed to it now." },
+  { tag:"D", q:"I wasn't ___ eating spicy food, so the curry was too hot for me.", opts:["used to eat","used to eating","would eat","getting used to eat"], a:1,
+    exp:"<strong>used to eating</strong> — after <em>be used to</em>, the gerund (-ing) is required, not the bare infinitive." },
+  { tag:"D", q:"She ___ the long commute now — she does it every day.", opts:["is used to","used to","would","got used to"], a:0,
+    exp:"<strong>is used to</strong> (+ the long commute) — she is accustomed to it now. <em>Used to</em> would imply a past habit that no longer exists." },
+  { tag:"D", q:"They had lived in the city for years, so they ___ the noise.", opts:["used to","would","were used to","got used to"], a:2,
+    exp:"<strong>were used to</strong> (+ the noise) — they were accustomed to it. This is <em>be used to</em> in the past tense." },
+  { tag:"D", q:"He ___ giving presentations in front of large audiences.", opts:["used to give","is used to giving","would give","gets used to give"], a:1,
+    exp:"<strong>is used to giving</strong> — <em>be used to</em> + -ing = accustomed to. The gerund is mandatory after this structure." },
+
+  // ── [E] get used to (ongoing process of adjustment) ────────────────
+  { tag:"G", q:"Living alone is a new experience for me, but I'm ___ it.", opts:["used to","getting used to","got used to","would get used to"], a:1,
+    exp:"<strong>getting used to</strong> — <em>get used to</em> describes the process of becoming accustomed. <em>I'm getting used to it</em> = the process is happening now." },
+  { tag:"G", q:"At the moment, Lobar ___ doing exercise for an hour a day.", opts:["used to","gets used to","is getting used to","would get used to"], a:2,
+    exp:"<strong>is getting used to</strong> — present continuous of <em>get used to</em> shows the ongoing adjustment process." },
+  { tag:"G", q:"It took him a while, but he ___ working night shifts.", opts:["used to","got used to","is getting used to","would get used to"], a:1,
+    exp:"<strong>got used to</strong> — the process of adjustment is now complete (<em>got</em> = past simple of <em>get</em>)." },
+  { tag:"G", q:"She moved to a new city last month and she ___ the lifestyle.", opts:["used to","is used to","is getting used to","would get used to"], a:2,
+    exp:"<strong>is getting used to</strong> — she is in the process of adjusting (not yet fully accustomed)." },
+  { tag:"G", q:"They've only just started their new jobs, so they're still ___ the routine.", opts:["used to","getting used to","got used to","would get used to"], a:1,
+    exp:"<strong>getting used to</strong> — they are currently in the process of adjusting." },
+  { tag:"G", q:"After a few weeks, you ___ the different time zone.", opts:["will used to","will be used to","will get used to","would get used to"], a:2,
+    exp:"<strong>will get used to</strong> — future form of <em>get used to</em> = you will eventually become accustomed to it." },
+  { tag:"G", q:"I ___ the new software — it's very different from what I used before.", opts:["am not used to","haven't used to","didn't use to","wouldn't"], a:0,
+    exp:"<strong>am not used to</strong> — <em>be used to</em> (negative) = not accustomed to. <em>Haven't used to</em> is not a valid English structure." },
+  { tag:"G", q:"Moving to a new country is hard. You have to ___ a completely different culture.", opts:["used to","use to","get used to","be used to"], a:2,
+    exp:"<strong>get used to</strong> — the verb phrase expressing the process of adjustment is <em>get used to</em> + noun/-ing." },
+
+  // ── [F] didn't use to (negative past habit) ────────────────────────
+  { tag:"F", q:"Helga ___ study any languages, but she's started learning French.", opts:["used to","didn't use to","wasn't used to","wouldn't"], a:1,
+    exp:"<strong>didn't use to</strong> — negative past habit. The sentence says she has <em>started</em> now, so the past was negative. <em>Used to</em> (positive) would mean the opposite." },
+  { tag:"F", q:"I ___ like coffee when I was young, but now I can't live without it.", opts:["used to","didn't use to","wasn't used to","wouldn't"], a:1,
+    exp:"<strong>didn't use to</strong> — the context (but now I can't live without it) shows the past was the opposite of now, so we need the negative form." },
+  { tag:"F", q:"He ___ care about his health, but the doctor's warning changed everything.", opts:["used to","didn't use to","wasn't used to","wouldn't"], a:1,
+    exp:"<strong>didn't use to</strong> — negative past habit. He didn't care before; now he does." },
+  { tag:"F", q:"They ___ have a car — they always took the bus everywhere.", opts:["used to","didn't use to","weren't used to","wouldn't"], a:1,
+    exp:"<strong>didn't use to</strong> — the second clause confirms they used the bus, so they did NOT have a car. Negative past habit." },
+  { tag:"F", q:"She ___ enjoy cooking, but after taking a course she loves it.", opts:["used to","didn't use to","wasn't used to","wouldn't"], a:1,
+    exp:"<strong>didn't use to</strong> — the contrast (but now she loves it) shows the past habit was negative." },
+  { tag:"F", q:"We ___ go abroad for holidays — we always stayed in the country.", opts:["used to","didn't use to","weren't used to","wouldn't"], a:1,
+    exp:"<strong>didn't use to</strong> — negative past habit confirmed by the second clause." },
+  { tag:"F", q:"He ___ speak English at all, but now he's almost fluent.", opts:["used to","didn't use to","wasn't used to","wouldn't"], a:1,
+    exp:"<strong>didn't use to</strong> — negative past habit. Now he is fluent, so before he wasn't." },
+  { tag:"F", q:"My sister ___ wear glasses, but she's needed them since university.", opts:["used to","didn't use to","wasn't used to","wouldn't"], a:1,
+    exp:"<strong>didn't use to</strong> — she didn't wear glasses before university. Negative past habit." },
+
+  // ── MIXED REVISION ─────────────────────────────────────────────────
+  { tag:"MIX", q:"When Nick was a student, he ___ in a flat where it was nice and cosy.", opts:["would live","used to living","got used to live","was used to live"], a:0,
+    exp:"<strong>would live</strong> (or <em>used to live</em>) — both are correct for a past repeated situation. <em>Would live</em> emphasises the habitual nature." },
+  { tag:"MIX", q:"I ___ early mornings, but my new job starts at 6 a.m. so I have no choice.", opts:["didn't use to","am not used to","would not","haven't used to"], a:1,
+    exp:"<strong>am not used to</strong> — <em>be used to</em> (negative present) = not yet accustomed to early mornings." },
+  { tag:"MIX", q:"She ___ live in Paris before she moved to London.", opts:["would","used to","was used to","got used to"], a:1,
+    exp:"<strong>used to live</strong> — past state (she no longer lives there). We prefer <em>used to</em> for states, not <em>would</em>." },
+  { tag:"MIX", q:"My brother ___ tidy his room without being asked — mum always had to remind him.", opts:["used to","would","didn't use to","wasn't used to"], a:2,
+    exp:"<strong>didn't use to</strong> — negative past habit. He never tidied without being asked." },
+  { tag:"MIX", q:"After a year abroad, she ___ looking after herself completely independently.", opts:["used to","would","was used to","got used to"], a:2,
+    exp:"<strong>was used to</strong> — after a year she was accustomed to it. <em>Be used to</em> + gerund = accustomed to." },
+  { tag:"MIX", q:"He ___ be very shy as a teenager, but now he's incredibly outgoing.", opts:["would","got used to","used to","is used to"], a:2,
+    exp:"<strong>used to be</strong> — past state (shyness). We use <em>used to</em> not <em>would</em> with state verbs like <em>be</em>." },
+  { tag:"MIX", q:"They ___ eating with chopsticks after living in Japan for two years.", opts:["used to","are used to","got used to","would"], a:1,
+    exp:"<strong>are used to</strong> — they are currently accustomed to it after two years. <em>Be used to</em> + gerund." },
+  { tag:"MIX", q:"I ___ play video games for hours every Saturday when I was young.", opts:["was used to","used to","got used to","am used to"], a:1,
+    exp:"<strong>used to play</strong> — past repeated action/habit. Bare infinitive after <em>used to</em>." },
+  { tag:"MIX", q:"At first the noise was unbearable, but eventually we ___.", opts:["used to it","got used to it","would use to it","are used to it"], a:1,
+    exp:"<strong>got used to it</strong> — the process of adjustment is complete (<em>got used to</em> + noun/pronoun)." },
+  { tag:"MIX", q:"My grandmother ___ have a beautiful garden full of roses.", opts:["was used to","got used to","used to","is used to"], a:2,
+    exp:"<strong>used to have</strong> — past state. <em>Have</em> is a state verb here; use <em>used to</em>, not <em>would</em>." },
+  { tag:"MIX", q:"He is finding the new management style difficult because he ___ doing things his own way.", opts:["used to","is used to","didn't use to","would"], a:1,
+    exp:"<strong>is used to</strong> — he is accustomed to his old way. <em>Be used to</em> + -ing = current state of being accustomed." },
+  { tag:"MIX", q:"___ you have a pet when you were growing up?", opts:["Would","Did you use to","Were you used to","Used you to"], a:1,
+    exp:"<strong>Did you use to</strong> — question form of <em>used to</em>. <em>Would</em> can also work here, but <em>Did you use to</em> is the standard question form." },
+  { tag:"MIX", q:"The new employees ___ the fast pace of the office environment.", opts:["are getting used to","used to","would","got used to"], a:0,
+    exp:"<strong>are getting used to</strong> — they are currently in the process of adjusting (present continuous of <em>get used to</em>)." },
+  { tag:"MIX", q:"We ___ visit our grandparents every Sunday for lunch — it was a family tradition.", opts:["were used to","got used to","used to","are used to"], a:2,
+    exp:"<strong>used to visit</strong> (or <em>would visit</em>) — repeated past habit/tradition. Bare infinitive after <em>used to</em>." },
+  { tag:"MIX", q:"I can't ___ sleeping with the window open — I find it too cold.", opts:["used to","use to","get used to","be used to"], a:2,
+    exp:"<strong>get used to</strong> — the expression <em>can't get used to</em> means you are unable to become accustomed to something." },
+  { tag:"MIX", q:"She ___ believe in ghosts when she was young, but a strange experience changed her mind.", opts:["didn't use to","wasn't used to","wouldn't","used to not"], a:0,
+    exp:"<strong>didn't use to</strong> — negative past habit. She did not believe before; something changed her." },
+  { tag:"MIX", q:"After retiring, my father ___ sleeping in late — something he could never do while working.", opts:["used to","got used to","is used to","would"], a:1,
+    exp:"<strong>got used to</strong> — he became accustomed to it after retiring. <em>Get used to</em> = the process of adjustment." },
+  { tag:"MIX", q:"There ___ a beautiful old church in the village square before it was destroyed in the war.", opts:["would be","was used to being","used to be","got used to being"], a:2,
+    exp:"<strong>used to be</strong> — past state (the church existed but no longer does). <em>Would be</em> is incorrect for states." },
+];
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let questions=[], current=0, score=0, wrongCount=0, skipCount=0;
+let answered=false, timer=null, timeLeft=300, segStates=[];
+let studentName='', answerLog=[];
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function goToName(){
+  show('name-screen');
+  setTimeout(()=>document.getElementById('student-name').focus(),100);
+}
+
+function confirmName(){
+  const v=document.getElementById('student-name').value.trim();
+  const err=document.getElementById('name-error');
+  if(!v){err.style.display='block';return;}
+  err.style.display='none';
+  studentName=v;
+  startQuiz();
+}
+
+function startQuiz(){
+  questions=shuffle(ALL_QUESTIONS).slice(0,10);
+  answerLog=[];
+  current=0;score=0;wrongCount=0;skipCount=0;
+  timeLeft=300;answered=false;
+  segStates=Array(10).fill('pending');
+  show('quiz-screen');
+  buildProg();
+  loadQ();
+  startTimer();
+}
+
+function show(id){
+  ['intro-screen','name-screen','quiz-screen','result-screen','timeout-screen'].forEach(s=>{
+    document.getElementById(s).classList.add('hidden');
+  });
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function buildProg(){
+  const t=document.getElementById('prog-track');
+  t.innerHTML='';
+  for(let i=0;i<10;i++){
+    const s=document.createElement('div');
+    s.className='prog-seg';s.id='seg-'+i;
+    t.appendChild(s);
+  }
+  updateProg();
+}
+
+function updateProg(){
+  for(let i=0;i<10;i++){
+    const s=document.getElementById('seg-'+i);
+    s.className='prog-seg';
+    if(segStates[i]==='correct')s.classList.add('correct');
+    else if(segStates[i]==='wrong')s.classList.add('wrong');
+    else if(i===current&&segStates[i]==='pending')s.classList.add('active');
+  }
+}
+
+function loadQ(){
+  answered=false;
+  const q=questions[current];
+  document.getElementById('q-num').textContent=`Question ${current+1}`;
+  document.getElementById('prog-label').textContent=`${current+1} / 10`;
+  document.getElementById('q-text').innerHTML=q.q.replace('___','<mark>___</mark>');
+  document.getElementById('feedback').className='feedback';
+
+  // Shuffle options
+  const correctText=q.opts[q.a];
+  const shuffled=shuffle([...q.opts]);
+  q._shuffled=shuffled;
+  q._ci=shuffled.indexOf(correctText);
+
+  const con=document.getElementById('options');
+  con.innerHTML='';
+  const labels=['A','B','C','D'];
+  shuffled.forEach((opt,i)=>{
+    const d=document.createElement('div');
+    d.className='opt';
+    d.innerHTML=`<span class="opt-lbl">${labels[i]}</span>${opt}`;
+    d.onclick=()=>selectA(i);
+    con.appendChild(d);
+  });
+  document.getElementById('next-btn').style.display='none';
+  updateProg();
+}
+
+function selectA(idx){
+  if(answered)return;
+  answered=true;
+  const q=questions[current];
+  const opts=document.querySelectorAll('.opt');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct=q._ci;
+  const fb=document.getElementById('feedback');
+  if(idx===correct){
+    opts[idx].classList.add('correct-ans');
+    score++;segStates[current]='correct';
+    fb.className='feedback ok show';
+    fb.innerHTML=`✓ Correct! ${q.exp}`;
+    answerLog.push({q:q.q,chosen:q._shuffled[idx],correct:q._shuffled[correct],result:'correct',tag:q.tag});
+  } else {
+    opts[idx].classList.add('wrong-ans');
+    opts[correct].classList.add('correct-ans');
+    wrongCount++;segStates[current]='wrong';
+    fb.className='feedback bad show';
+    fb.innerHTML=`✗ Incorrect. The answer is <strong>${q._shuffled[correct]}</strong>. ${q.exp}`;
+    answerLog.push({q:q.q,chosen:q._shuffled[idx],correct:q._shuffled[correct],result:'wrong',tag:q.tag});
+  }
+  updateProg();
+  document.getElementById('next-btn').style.display='inline-block';
+}
+
+function skipQ(){
+  if(answered)return;
+  answered=true;skipCount++;segStates[current]='wrong';
+  const q=questions[current];
+  const opts=document.querySelectorAll('.opt');
+  opts.forEach(o=>o.classList.add('disabled'));
+  opts[q._ci].classList.add('correct-ans');
+  const fb=document.getElementById('feedback');
+  fb.className='feedback bad show';
+  fb.innerHTML=`Skipped. The answer was <strong>${q._shuffled[q._ci]}</strong>. ${q.exp}`;
+  answerLog.push({q:q.q,chosen:'(skipped)',correct:q._shuffled[q._ci],result:'skipped',tag:q.tag});
+  updateProg();
+  document.getElementById('next-btn').style.display='inline-block';
+}
+
+function nextQ(){
+  current++;
+  if(current>=10)endQuiz();
+  else loadQ();
+}
+
+function endQuiz(){
+  clearInterval(timer);
+  const pct=Math.round((score/10)*100);
+  const deg=(score/10)*360;
+  document.getElementById('result-ring').style.setProperty('--deg',deg+'deg');
+  document.getElementById('result-score').innerHTML=`${score}<span>/ 10</span>`;
+  document.getElementById('rs-correct').textContent=score;
+  document.getElementById('rs-wrong').textContent=wrongCount;
+  document.getElementById('rs-skip').textContent=skipCount;
+  let title,sub;
+  if(score>=9){title='Outstanding! 🏆';sub='Excellent command of these structures!';}
+  else if(score>=7){title='Well Done! 🎉';sub='Great understanding of used to, would and be used to.';}
+  else if(score>=5){title='Good Effort! 📚';sub='Keep practising — you\'re getting there.';}
+  else{title='Keep Practising! 💪';sub='Review the rules and try again.';}
+  document.getElementById('result-title').textContent=title;
+  document.getElementById('result-sub').textContent=sub;
+  sendResults('completed');
+  show('result-screen');
+}
+
+function startTimer(){
+  clearInterval(timer);
+  updateTimerDisplay();
+  timer=setInterval(()=>{
+    timeLeft--;updateTimerDisplay();
+    if(timeLeft<=0){clearInterval(timer);timeOut();}
+  },1000);
+}
+
+function updateTimerDisplay(){
+  const m=Math.floor(timeLeft/60),s=timeLeft%60;
+  const el=document.getElementById('timer-display');
+  el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
+  el.className='';
+  if(timeLeft<=30)el.classList.add('danger');
+  else if(timeLeft<=60)el.classList.add('warn');
+}
+
+function timeOut(){
+  document.getElementById('to-correct').textContent=score;
+  document.getElementById('to-wrong').textContent=wrongCount;
+  document.getElementById('to-skip').textContent=skipCount+(10-current-(answered?1:0));
+  sendResults('timeout');
+  show('timeout-screen');
+}
+
+function sendResults(status){
+  const pct=Math.round((score/10)*100);
+  const formData=new FormData();
+  formData.append('name', studentName);
+  formData.append('score', pct);
+  formData.append('date', new Date().toLocaleString());
+  fetch(SHEETS_URL,{method:'POST',body:formData});
+}
+</script>
+</body>
+</html>
