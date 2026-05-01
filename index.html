@@ -556,7 +556,7 @@ function startQuiz(){
   questions=shuffle(ALL_QUESTIONS).slice(0,10);
   answerLog=[];
   current=0;score=0;wrongCount=0;skipCount=0;
-  timeLeft=300;answered=false;
+  timeLeft=600;answered=false;
   segStates=Array(10).fill('pending');
   show('quiz-screen');
   buildProg();
