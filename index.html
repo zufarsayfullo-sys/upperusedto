@@ -18,9 +18,7 @@
     --glass:    rgba(255,255,255,0.06);
     --border:   rgba(255,255,255,0.12);
   }
-
   * { margin:0; padding:0; box-sizing:border-box; }
-
   body {
     font-family: 'Outfit', sans-serif;
     min-height: 100vh;
@@ -29,8 +27,6 @@
     overflow-x: hidden;
     position: relative;
   }
-
-  /* ── BACKGROUND ── */
   .bg-photo {
     position: fixed; inset: 0; z-index: 0;
     background:
@@ -47,16 +43,12 @@
       radial-gradient(ellipse 40% 60% at 5% 50%, rgba(74,124,89,0.15) 0%, transparent 70%),
       radial-gradient(ellipse 30% 40% at 95% 20%, rgba(200,169,110,0.08) 0%, transparent 60%);
   }
-
-  /* ── LAYOUT ── */
   #app {
     position: relative; z-index: 10;
     min-height: 100vh;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     padding: 24px 16px;
   }
-
-  /* ── CARD ── */
   .card {
     background: rgba(20,38,22,0.88);
     backdrop-filter: blur(24px);
@@ -66,8 +58,6 @@
     width: 100%; max-width: 780px;
     box-shadow: 0 40px 100px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.07);
   }
-
-  /* ── INTRO ── */
   #intro-screen { text-align: center; }
   .intro-eyebrow {
     font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
@@ -94,14 +84,11 @@
   .cf-wrong { font-size: 12px; color: var(--red); margin-bottom: 3px; text-decoration: line-through; opacity: 0.8; }
   .cf-right { font-size: 12px; color: var(--green); font-weight: 600; }
   .cf-label { font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
-
   .intro-stats {
     display: flex; justify-content: center; gap: 40px; margin-bottom: 32px;
   }
   .is-val { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--gold); }
   .is-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.35); margin-top: 2px; }
-
-  /* ── NAME SCREEN ── */
   #name-screen { text-align: center; }
   .name-input {
     width: 100%; max-width: 380px;
@@ -113,8 +100,6 @@
   .name-input::placeholder { color: rgba(255,255,255,0.25); }
   .name-input:focus { border-color: var(--gold); }
   .name-error { color: var(--red); font-size: 13px; margin-bottom: 16px; display: none; }
-
-  /* ── QUIZ HEADER ── */
   .quiz-header {
     display: flex; align-items: center; justify-content: space-between; margin-bottom: 26px;
   }
@@ -130,8 +115,6 @@
   #timer-display.warn  { color: #e09a3a; }
   #timer-display.danger { color: var(--red); animation: blink 0.8s infinite; }
   @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.4} }
-
-  /* ── PROGRESS ── */
   .prog-meta {
     display: flex; justify-content: space-between; font-size: 11px;
     color: rgba(255,255,255,0.35); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;
@@ -147,8 +130,6 @@
   .prog-seg.wrong    { background: var(--red); }
   .prog-seg.active   { background: var(--gold); animation: segpulse 1s infinite; }
   @keyframes segpulse { 0%,100%{opacity:1}50%{opacity:0.5} }
-
-  /* ── QUESTION ── */
   .q-num { font-size: 11px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; margin-bottom: 12px; }
   .q-text {
     font-family: 'Cormorant Garamond', serif;
@@ -158,8 +139,6 @@
     background: transparent; color: var(--gold-lt);
     border-bottom: 2px dashed rgba(200,169,110,0.4); font-style: italic;
   }
-
-  /* ── OPTIONS ── */
   .options { display: flex; flex-direction: column; gap: 11px; margin-bottom: 28px; }
   .opt {
     position: relative; cursor: pointer;
@@ -189,8 +168,6 @@
   .opt.wrong-ans .opt-lbl { background: var(--red); border-color: var(--red); color: #fff; }
   .opt.disabled { cursor: default; pointer-events: none; }
   @keyframes pop { 0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)} }
-
-  /* ── FEEDBACK ── */
   .feedback {
     border-radius: 10px; padding: 13px 16px; margin-bottom: 22px;
     font-size: 14px; line-height: 1.6; display: none;
@@ -200,8 +177,6 @@
   .feedback.ok  { background: rgba(58,140,92,0.15); border-left: 3px solid var(--green); }
   .feedback.bad { background: rgba(184,68,68,0.15); border-left: 3px solid var(--red); }
   @keyframes fadeup { from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)} }
-
-  /* ── BUTTONS ── */
   .btn-row { display: flex; justify-content: flex-end; gap: 10px; }
   .btn {
     font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600;
@@ -211,8 +186,6 @@
   .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,169,110,0.3); }
   .btn-ghost { background: transparent; color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.15); }
   .btn-ghost:hover { color: #fff; border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.05); }
-
-  /* ── RESULT ── */
   #result-screen { text-align: center; }
   .result-ring {
     width: 130px; height: 130px; margin: 0 auto 26px; border-radius: 50%;
@@ -235,15 +208,11 @@
   .rs-val { font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:700; }
   .rs-val.g { color:var(--green); } .rs-val.r { color:var(--red); }
   .rs-label { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:rgba(255,255,255,0.35); margin-top:2px; }
-
-  /* ── TIMEOUT ── */
   #timeout-screen { text-align:center; }
   .to-icon { font-size:52px; margin-bottom:14px; }
   .to-title { font-family:'Cormorant Garamond',serif; font-size:32px; margin-bottom:8px; color:var(--cream); }
   .to-sub { color:rgba(255,255,255,0.45); font-size:15px; margin-bottom:26px; }
-
   .hidden { display:none!important; }
-
   @media(max-width:600px){
     .card { padding:28px 20px; }
     .q-text { font-size:19px; }
@@ -300,7 +269,7 @@
     <div class="intro-stats">
       <div><div class="is-val">100</div><div class="is-label">Questions</div></div>
       <div><div class="is-val">10</div><div class="is-label">Per Round</div></div>
-      <div><div class="is-val">5:00</div><div class="is-label">Timer</div></div>
+      <div><div class="is-val">10:00</div><div class="is-label">Timer</div></div>
     </div>
     <button class="btn btn-primary" onclick="goToName()">Begin Quiz →</button>
   </div>
@@ -320,7 +289,7 @@
   <div id="quiz-screen" class="hidden">
     <div class="quiz-header">
       <div class="q-badge">Used To · Would · Be Used To</div>
-      <div class="timer-wrap"><span>⏱</span><span id="timer-display">5:00</span></div>
+      <div class="timer-wrap"><span>⏱</span><span id="timer-display">10:00</span></div>
     </div>
     <div class="prog-meta"><span>Progress</span><strong id="prog-label">1 / 10</strong></div>
     <div class="prog-track" id="prog-track"></div>
@@ -368,18 +337,6 @@
 <script>
 const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzvhd9K2CVC9_EPkhAEYFDp8K1CBpGUWNrEAEVC4w4Q8eHh5uDFO_aaKPMcH-Tajv5U/exec';
 
-// ═══════════════════════════════════════════════════════════════════════
-// QUESTION BANK — 100 questions targeting real student error patterns
-//
-// ERROR TAGS:
-//  [A] used to + VERB (bare inf) vs used to + -ing
-//  [B] would (past habit) vs used to (past state)
-//  [C] would vs is usually (present habit)
-//  [D] be used to + -ing (present/past adjustment)
-//  [E] get/be used to vs used to (confusion)
-//  [F] didn't use to (negative) vs used to (positive)
-//  [G] get used to (ongoing adjustment) vs used to / would
-// ═══════════════════════════════════════════════════════════════════════
 const ALL_QUESTIONS = [
 
   // ── [A] used to + bare infinitive (NOT gerund) ─────────────────────
@@ -405,17 +362,24 @@ const ALL_QUESTIONS = [
     exp:"<strong>used to be</strong> — we use <em>used to</em> for past states, NOT <em>would</em>. <em>Would</em> is only for repeated actions, not states." },
   { tag:"B", q:"There ___ a cinema on that corner, but it was demolished years ago.", opts:["would be","would have","used to be","was used to be"], a:2,
     exp:"<strong>used to be</strong> — permanent states in the past use <em>used to</em>, not <em>would</em>." },
-  { tag:"B", q:"My parents ___ sit with us at bedtime when we were little.", opts:["used to","would","were used to","got used to"], a:1,
-    exp:"<strong>would sit</strong> — for repeated past actions, both <em>would</em> and <em>used to</em> are correct, but <em>would</em> is more natural here as it describes a repeated routine, not a state." },
-  { tag:"B", q:"She ___ love jazz when she was younger, but now she prefers classical.", opts:["would love","would be loving","used to love","was used to love"], a:2,
+  // FIX 1: Changed from "My parents ___ sit" (ambiguous — both would/used to work for repeated action)
+  // to a state verb context where only 'used to' is correct
+  { tag:"B", q:"My parents ___ very strict about bedtime when I was a child.", opts:["used to","would","were used to","got used to"], a:0,
+    exp:"<strong>used to be</strong> — <em>be</em> is a state verb, so we use <em>used to</em>, not <em>would</em>. <em>Would</em> cannot be used with state verbs to describe past states." },
+  // FIX 2: Changed from "She ___ love jazz" — 'love' appeared in question AND in correct answer 'used to love'
+  { tag:"B", q:"Jazz was her whole world back then — she ___ it passionately, but her taste has changed.", opts:["would love","would be loving","used to love","was used to love"], a:2,
     exp:"<strong>used to love</strong> — <em>love</em> is a state verb; we use <em>used to</em>, not <em>would</em>, with state verbs." },
-  { tag:"B", q:"He ___ have a beard, but he shaved it off last year.", opts:["would have","would be having","used to have","was used to have"], a:2,
+  // FIX 3: Changed from "He ___ have a beard" — 'have' appeared in question AND in 'used to have'
+  { tag:"B", q:"Before shaving it all off, he ___ a full beard for most of his adult life.", opts:["would have","would be having","used to have","was used to have"], a:2,
     exp:"<strong>used to have</strong> — <em>have</em> is a state verb here; use <em>used to</em>, not <em>would</em>." },
-  { tag:"B", q:"My father ___ pick me up from school every Friday.", opts:["used to picking","was used to pick","would pick","got used to picking"], a:2,
-    exp:"<strong>would pick</strong> — a repeated past action, so <em>would</em> is correct. <em>Used to pick</em> also works, but <em>would</em> emphasises the repeated routine." },
-  { tag:"B", q:"I ___ know the answer to every question in class when I was young.", opts:["would know","would be knowing","used to know","was used to know"], a:2,
+  // FIX 4: Changed from "My father ___ pick me up" — 'pick' appeared in question AND in 'would pick'
+  { tag:"B", q:"Every Friday without fail, my father ___ arrive at the school gates right on time.", opts:["used to arriving","was used to arrive","would arrive","got used to arriving"], a:2,
+    exp:"<strong>would arrive</strong> — a repeated past action, so <em>would</em> is correct. <em>Used to arrive</em> also works, but <em>would</em> emphasises the repeated routine." },
+  // FIX 5: Changed from "I ___ know the answer" — 'know' appeared in question AND in 'used to know'
+  { tag:"B", q:"My teacher called me the class genius — I ___ all the answers back then.", opts:["would know","would be knowing","used to know","was used to know"], a:2,
     exp:"<strong>used to know</strong> — <em>know</em> is a state verb; use <em>used to</em>, not <em>would</em>." },
-  { tag:"B", q:"We ___ go on holiday to the same village every summer.", opts:["used to going","were used to go","would go","got used to going"], a:2,
+  // FIX 6: Changed from "We ___ go on holiday" — 'go' appeared in question AND in 'would go'
+  { tag:"B", q:"Every summer without fail, we ___ to the same little village to stay with relatives.", opts:["used to going","were used to go","would go","got used to going"], a:2,
     exp:"<strong>would go</strong> — a repeated past action. <em>Used to go</em> is also correct, but <em>would</em> is natural here." },
 
   // ── [C] would vs is usually (present habit / general truth) ────────
@@ -436,12 +400,12 @@ const ALL_QUESTIONS = [
   { tag:"D", q:"My dad got angry when mum drove, because he ___ driving himself.", opts:["gets used to","used to drive","was used to driving","would drive"], a:2,
     exp:"<strong>was used to driving</strong> — <em>be used to</em> + gerund (-ing) means 'be accustomed to'. <em>Gets used to drive</em> is wrong — it must be <em>to driving</em>." },
   { tag:"D", q:"She finds the night shifts hard because she ___ working during the day.", opts:["used to work","is used to working","would work","gets used to work"], a:1,
-    exp:"<strong>is used to working</strong> — <em>be used to</em> + gerund = accustomed to. After <em>used to</em> (in this structure) we need -ing." },
+    exp:"<strong>is used to working</strong> — <em>be used to</em> + gerund = accustomed to. After <em>be used to</em> we need -ing." },
   { tag:"D", q:"After six months in Iceland, he ___ the cold weather.", opts:["used to","is used to","has got used to","got used to"], a:3,
-    exp:"<strong>got used to</strong> — this describes the process of becoming accustomed. <em>Got used to</em> + gerund (the cold weather) = became accustomed to it." },
+    exp:"<strong>got used to</strong> — this describes the process of becoming accustomed. <em>Got used to</em> + gerund/noun = became accustomed to it." },
   { tag:"D", q:"The children ___ waking up early because school starts at 7:30.", opts:["used to wake","are used to waking","would wake","got used to wake"], a:1,
     exp:"<strong>are used to waking</strong> — <em>be used to</em> + -ing = they are accustomed to it now." },
-  { tag:"D", q:"I wasn't ___ eating spicy food, so the curry was too hot for me.", opts:["used to eat","used to eating","would eat","getting used to eat"], a:1,
+  { tag:"D", q:"I wasn't ___ spicy food at all, so the curry was far too hot for me.", opts:["used to eating","used to eat","would eat","getting used to eat"], a:0,
     exp:"<strong>used to eating</strong> — after <em>be used to</em>, the gerund (-ing) is required, not the bare infinitive." },
   { tag:"D", q:"She ___ the long commute now — she does it every day.", opts:["is used to","used to","would","got used to"], a:0,
     exp:"<strong>is used to</strong> (+ the long commute) — she is accustomed to it now. <em>Used to</em> would imply a past habit that no longer exists." },
@@ -450,7 +414,7 @@ const ALL_QUESTIONS = [
   { tag:"D", q:"He ___ giving presentations in front of large audiences.", opts:["used to give","is used to giving","would give","gets used to give"], a:1,
     exp:"<strong>is used to giving</strong> — <em>be used to</em> + -ing = accustomed to. The gerund is mandatory after this structure." },
 
-  // ── [E] get used to (ongoing process of adjustment) ────────────────
+  // ── [E/G] get used to (ongoing process of adjustment) ────────────────
   { tag:"G", q:"Living alone is a new experience for me, but I'm ___ it.", opts:["used to","getting used to","got used to","would get used to"], a:1,
     exp:"<strong>getting used to</strong> — <em>get used to</em> describes the process of becoming accustomed. <em>I'm getting used to it</em> = the process is happening now." },
   { tag:"G", q:"At the moment, Lobar ___ doing exercise for an hour a day.", opts:["used to","gets used to","is getting used to","would get used to"], a:2,
@@ -463,8 +427,10 @@ const ALL_QUESTIONS = [
     exp:"<strong>getting used to</strong> — they are currently in the process of adjusting." },
   { tag:"G", q:"After a few weeks, you ___ the different time zone.", opts:["will used to","will be used to","will get used to","would get used to"], a:2,
     exp:"<strong>will get used to</strong> — future form of <em>get used to</em> = you will eventually become accustomed to it." },
-  { tag:"G", q:"I ___ the new software — it's very different from what I used before.", opts:["am not used to","haven't used to","didn't use to","wouldn't"], a:0,
-    exp:"<strong>am not used to</strong> — <em>be used to</em> (negative) = not accustomed to. <em>Haven't used to</em> is not a valid English structure." },
+  // FIX 7: Changed from "I ___ the new software — it's very different from what I used before."
+  // The word 'used' at the end of the sentence echoed/hinted at the correct answer 'am not used to'
+  { tag:"G", q:"I ___ this new interface at all — it's completely different from anything I've tried before.", opts:["am not used to","haven't used to","didn't use to","wouldn't"], a:0,
+    exp:"<strong>am not used to</strong> — <em>be used to</em> (negative present) = not yet accustomed to. <em>Haven't used to</em> is not a valid English structure." },
   { tag:"G", q:"Moving to a new country is hard. You have to ___ a completely different culture.", opts:["used to","use to","get used to","be used to"], a:2,
     exp:"<strong>get used to</strong> — the verb phrase expressing the process of adjustment is <em>get used to</em> + noun/-ing." },
 
@@ -529,7 +495,7 @@ const ALL_QUESTIONS = [
 // STATE
 // ═══════════════════════════════════════════════════════
 let questions=[], current=0, score=0, wrongCount=0, skipCount=0;
-let answered=false, timer=null, timeLeft=300, segStates=[];
+let answered=false, timer=null, timeLeft=600, segStates=[];
 let studentName='', answerLog=[];
 
 function shuffle(arr){
@@ -600,7 +566,6 @@ function loadQ(){
   document.getElementById('q-text').innerHTML=q.q.replace('___','<mark>___</mark>');
   document.getElementById('feedback').className='feedback';
 
-  // Shuffle options
   const correctText=q.opts[q.a];
   const shuffled=shuffle([...q.opts]);
   q._shuffled=shuffled;
